@@ -1,0 +1,24 @@
+﻿@model SuporteIA.Models.Chamado
+
+@{
+    ViewData["Title"] = "Novo Chamado";
+}
+
+<h2 class="mt-3 mb-4">Registrar novo chamado</h2>
+
+<form asp-action="Create" method="post">
+    <div class="mb-3">
+        <label asp-for="NmProblema" class="form-label"></label>
+        <textarea asp-for="NmProblema" class="form-control" rows="4"></textarea>
+        <span asp-validation-for="NmProblema" class="text-danger"></span>
+    </div>
+
+    <button type="submit" class="btn btn-primary">Gerar Solução com IA</button>
+</form>
+
+@if (TempData["Mensagem"] != null)
+{
+    <div class="alert alert-success mt-3">
+        @TempData["Mensagem"]
+    </div>
+}

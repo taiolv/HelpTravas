@@ -1,0 +1,31 @@
+﻿@model SuporteIA.Models.AppUser
+@{
+    ViewData["Title"] = "Meu Perfil";
+}
+
+<div class="container mt-5">
+    <h3 class="mb-4"><i class="bi bi-person-circle"></i> Meu Perfil</h3>
+
+    <div class="card shadow-sm">
+        <div class="card-body">
+            <p><strong>Nome:</strong> @Model.NomeCompleto</p>
+            <p><strong>Email:</strong> @Model.Email</p>
+            <p><strong>Cargo:</strong> @Model.Cargo</p>
+            <p><strong>Data de Cadastro:</strong> @Model.DataCadastro.ToString("dd/MM/yyyy HH:mm")</p>
+        </div>
+    </div>
+
+    <div class="mt-4 text-center">
+        <form asp-action="ExcluirMeusDados" method="post" onsubmit="return confirm('Tem certeza que deseja excluir seus dados e conta?');">
+            <button type="submit" class="btn btn-danger">
+                <i class="bi bi-trash"></i> Excluir Minha Conta (LGPD)
+            </button>
+        </form>
+    </div>
+
+    <div class="text-center mt-3">
+        <a asp-controller="Chamado" asp-action="Index" class="btn btn-secondary">
+            <i class="bi bi-arrow-left"></i> Voltar
+        </a>
+    </div>
+</div>

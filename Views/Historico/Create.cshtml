@@ -1,0 +1,27 @@
+﻿@{
+    ViewData["Title"] = "Adicionar ao Histórico";
+    var cdChamado = ViewBag.CdChamado;
+}
+
+<h3>Adicionar registro ao histórico</h3>
+
+<form asp-action="Create" method="post">
+    <input type="hidden" name="cdChamado" value="@cdChamado" />
+
+    <div class="mb-3">
+        <label class="form-label">Mensagem Arquivada</label>
+        <textarea name="mensagem" class="form-control" rows="4" required></textarea>
+    </div>
+
+    <div class="mb-3">
+        <label class="form-label">Solução (opcional)</label>
+        <textarea name="solucao" class="form-control" rows="3"></textarea>
+    </div>
+
+    <button type="submit" class="btn btn-success">
+        <i class="bi bi-save"></i> Salvar
+    </button>
+    <a asp-action="Index" asp-route-cdChamado="@cdChamado" class="btn btn-secondary ms-2">
+        <i class="bi bi-arrow-left"></i> Voltar
+    </a>
+</form>

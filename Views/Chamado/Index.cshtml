@@ -1,0 +1,128 @@
+﻿@model IEnumerable<SuporteIA.Models.Chamado>
+@using System.Linq
+@using Microsoft.AspNetCore.Identity
+@inject UserManager<AppUser> UserManager
+@inject SignInManager<AppUser> SignInManager
+
+@{
+    ViewData["Title"] = "Lista de Chamados";
+    bool isAdmin = User.IsInRole("Administrador");
+    bool isTecnico = User.IsInRole("Tecnico");
+}
+
+<div class="container mt-4">
+    <h2 class="mb-4 text-center">
+        <i class="bi bi-ticket-detailed"></i> Lista de Chamados
+    </h2>
+
+    @if (TempData["Mensagem"] != null)
+    {
+        <div id="alertSuccess" class="alert alert-success alert-dismissible fade show text-center" role="alert">
+            <i class="bi bi-check-circle-fill"></i> @TempData["Mensagem"]
+        </div>
+    }
+    @if (TempData["Erro"] != null)
+    {
+        <div id="alertError" class="alert alert-danger alert-dismissible fade show text-center" role="alert">
+            <i class="bi bi-exclamation-triangle-fill"></i> @TempData["Erro"]
+        </div>
+    }
+
+    <div class="table-responsive shadow-sm">
+        <table class="table table-striped table-hover align-middle">
+            <thead class="table-dark text-center">
+                <tr>
+                    <th>ID</th>
+                    <th>Problema</th>
+                    <th>Categoria</th>
+                    <th>Status</th>
+                    <th>Prioridade</th>
+                    <th>Data Abertura</th>
+                    <th>Solução IA</th>
+                    <th>Ações</th>
+                </tr>
+            </thead>
+            <tbody>
+                @if (!Model.Any())
+                {
+                    <tr>
+                        <td colspan="8" class="text-center text-muted">Nenhum chamado encontrado.</td>
+                    </tr>
+                }
+                else
+                {
+                    foreach (var item in Model)
+                    {
+                        string statusColor = item.Status switch
+                        {
+                            "Aberto" => "badge bg-warning text-dark",
+                            "Em andamento" => "badge bg-info text-dark",
+                            "Resolvido" => "badge bg-success",
+                            "Cancelado" => "badge bg-secondary",
+                            _ => "badge bg-light text-dark"
+                        };
+
+                        string prioridadeColor = item.Prioridade switch
+                        {
+                            "Alta" => "badge bg-danger",
+                            "Normal" => "badge bg-primary",
+                            "Baixa" => "badge bg-success",
+                            _ => "badge bg-light text-dark"
+                        };
+
+                        <tr>
+                            <td class="text-center fw-bold">@item.CdChamado</td>
+                            <td>@item.NmProblema</td>
+                            <td>@item.Categoria</td>
+                            <td class="text-center"><span class="@statusColor">@item.Status</span></td>
+                            <td class="text-center"><span class="@prioridadeColor">@item.Prioridade</span></td>
+                            <td class="text-center">@item.DataAbertura.ToString("dd/MM/yyyy HH:mm")</td>
+                            <td style="max-width: 300px; white-space: pre-wrap;">@item.SolucaoIA</td>
+                            <td class="text-center">
+                                <div class="btn-group">
+                                    <a asp-action="Details" asp-route-id="@item.CdChamado" class="btn btn-outline-primary btn-sm">
+                                        <i class="bi bi-eye"></i> Ver
+                                    </a>
+
+                                    @if (isAdmin || isTecnico)
+                                    {
+                                        <a asp-action="Edit" asp-route-id="@item.CdChamado" class="btn btn-outline-warning btn-sm">
+                                            <i class="bi bi-pencil-square"></i> Editar
+                                        </a>
+                                    }
+
+                                    @if (isAdmin)
+                                    {
+                                        <form asp-action="Delete" asp-route-id="@item.CdChamado" method="post" style="display:inline;">
+                                            <button type="submit" class="btn btn-outline-danger btn-sm"
+                                                    onclick="return confirm('Tem certeza que deseja excluir este chamado?');">
+                                                <i class="bi bi-trash"></i> Excluir
+                                            </button>
+                                        </form>
+                                    }
+                                </div>
+                            </td>
+                        </tr>
+                    }
+                }
+            </tbody>
+        </table>
+    </div>
+
+    <div class="text-start mt-4">
+        <a asp-action="Create" class="btn btn-success btn-lg">
+            <i class="bi bi-plus-circle"></i> Novo Chamado
+        </a>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        setTimeout(() => {
+            const success = document.getElementById('alertSuccess');
+            const error = document.getElementById('alertError');
+            if (success) success.classList.remove('show');
+            if (error) error.classList.remove('show');
+        }, 4000);
+    </script>
+}

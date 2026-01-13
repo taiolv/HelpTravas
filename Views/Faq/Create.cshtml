@@ -1,0 +1,29 @@
+﻿@{
+    ViewData["Title"] = "Nova FAQ via IA";
+}
+
+<div class="container mt-4" style="max-width: 600px;">
+    <h2 class="text-center mb-4">
+        <i class="bi bi-robot"></i> Criar FAQ com Ajuda da IA
+    </h2>
+
+    @if (TempData["Erro"] != null)
+    {
+        <div class="alert alert-danger">@TempData["Erro"]</div>
+    }
+
+    <form asp-action="Create" method="post">
+        <div class="mb-3">
+            <label for="pergunta" class="form-label">Pergunta</label>
+            <textarea id="pergunta" name="pergunta" rows="3" class="form-control" placeholder="Digite sua dúvida para a IA responder..." required></textarea>
+        </div>
+
+        <button type="submit" class="btn btn-success w-100">
+            <i class="bi bi-lightning-charge-fill"></i> Gerar e Salvar FAQ
+        </button>
+
+        <a asp-action="Index" class="btn btn-secondary w-100 mt-2">
+            <i class="bi bi-arrow-left-circle"></i> Voltar
+        </a>
+    </form>
+</div>

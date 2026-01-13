@@ -1,0 +1,22 @@
+﻿@{
+    ViewData["Title"] = "Dashboard";
+    var cat = (IEnumerable<dynamic>)ViewBag.PorCategoria;
+    var sts = (IEnumerable<dynamic>)ViewBag.PorStatus;
+    var pri = (IEnumerable<dynamic>)ViewBag.PorPrioridade;
+}
+<h2>Dashboard</h2>
+<canvas id="cat"></canvas>
+<canvas id="sts" class="mt-4"></canvas>
+<canvas id="pri" class="mt-4"></canvas>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script>
+    const toData = arr => ({ labels: arr.map(x => x.label), datasets: [{ data: arr.map(x => x.value) }]});
+    const catData = toData(@Html.Raw(System.Text.Json.JsonSerializer.Serialize(cat)));
+    const stsData = toData(@Html.Raw(System.Text.Json.JsonSerializer.Serialize(sts)));
+    const priData = toData(@Html.Raw(System.Text.Json.JsonSerializer.Serialize(pri)));
+
+    new Chart(document.getElementById('cat'), { type: 'pie', data: catData });
+    new Chart(document.getElementById('sts'), { type: 'bar', data: stsData });
+    new Chart(document.getElementById('pri'), { type: 'bar', data: priData });
+</script>

@@ -1,0 +1,64 @@
+﻿@model IEnumerable<SuporteIA.Models.Faq>
+@{
+    ViewData["Title"] = "FAQ";
+    bool isAdmin = User.IsInRole("Administrador");
+    bool isTecnico = User.IsInRole("Tecnico");
+}
+
+<div class="container mt-4">
+    <h2 class="mb-4 text-center">
+        <i class="bi bi-question-circle-fill"></i> Central de Dúvidas (FAQ)
+    </h2>
+    @if (TempData["Mensagem"] != null)
+    {
+        <div class="alert alert-success">@TempData["Mensagem"]</div>
+    }
+    @if (TempData["Erro"] != null)
+    {
+        <div class="alert alert-danger">@TempData["Erro"]</div>
+    }
+    @if (!Model.Any())
+    {
+        <div class="alert alert-warning text-center">
+            <i class="bi bi-info-circle"></i> Nenhuma FAQ cadastrada ainda.
+        </div>
+    }
+    else
+    {
+        @foreach (var f in Model)
+        {
+            <div class="card mb-3 shadow-sm border-0">
+                <div class="card-header bg-dark text-white">
+                    <strong><i class="bi bi-chat-right-dots"></i> Pergunta:</strong> @f.Pergunta
+                </div>
+                <div class="card-body bg-light" style="white-space: pre-wrap;">
+                    <strong><i class="bi bi-cpu"></i> Resposta:</strong>
+                    <div class="mt-2">@f.Resposta</div>
+                </div>
+                <div class="card-footer text-muted d-flex justify-content-between">
+                    <small>
+                        <i class="bi bi-clock-history"></i> Criado em @f.CriadoEm.ToLocalTime().ToString("dd/MM/yyyy HH:mm")
+                        • Fonte: @f.Fonte
+                    </small>
+                    @if (isAdmin || isTecnico)
+                    {
+                        <form asp-action="Delete" asp-route-id="@f.Id" method="post" class="d-inline">
+                            <button type="submit" class="btn btn-sm btn-outline-danger"
+                                    onclick="return confirm('Deseja excluir esta FAQ?');">
+                                <i class="bi bi-trash3"></i> Excluir
+                            </button>
+                        </form>
+                    }
+                </div>
+            </div>
+        }
+    }
+    @if (isAdmin || isTecnico)
+    {
+        <div class="text-center mt-4">
+            <a asp-action="Create" class="btn btn-success">
+                <i class="bi bi-robot"></i> Nova FAQ via IA
+            </a>
+        </div>
+    }
+</div>
